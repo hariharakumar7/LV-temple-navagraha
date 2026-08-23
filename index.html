@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Devotion</title>
+  <style>
+    :root {
+      --saffron: #FF9933;
+      --maroon: #800000;
+      --gold: #FFD700;
+      --bg-dark: #1A0000;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: radial-gradient(circle at center, #330000 0%, var(--bg-dark) 100%);
+      color: #FFFFFF;
+      font-family: 'Segoe UI', -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2vw;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* Main Today View */
+    .today-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .banner {
+      background: linear-gradient(90deg, transparent, var(--saffron), transparent);
+      color: #000;
+      width: 100%;
+      padding: 1vh 0;
+      font-size: 2vw;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 2vh;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
+    }
+
+    .deity-title {
+      font-size: 4vw;
+      color: var(--gold);
+      margin-bottom: 2vh;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+    }
+
+    .deity-image {
+      height: 35vh;
+      max-width: 80%;
+      object-fit: contain;
+      border: 4px solid var(--gold);
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+      margin-bottom: 2vh;
+    }
+
+    .mantra-box {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      padding: 2vh 4vw;
+      border-radius: 8px;
+      max-width: 90%;
+    }
+
+    .mantra-text {
+      font-size: 2.8vw;
+      font-weight: 600;
+      color: #FFF;
+      line-height: 1.3;
+    }
+
+    /* 7-Day Grid Footer */
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1vw;
+      margin-top: 2vh;
+      border-top: 2px solid var(--saffron);
+      padding-top: 1.5vh;
+    }
+
+    .day-card {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid #444;
+      border-radius: 6px;
+      padding: 1vh 0.5vw;
+    }
+
+    .day-card.active {
+      background: var(--saffron);
+      color: #000;
+      border-color: var(--gold);
+      transform: scale(1.05);
+    }
+
+    .day-name { font-size: 1vw; font-weight: bold; text-transform: uppercase; }
+    .day-deity { font-size: 1.1vw; margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+  <div class="today-container">
+    <div class="banner" id="today-banner">TODAY IS ...</div>
+    <h1 class="deity-title" id="deity-name">...</h1>
+    <img id="deity-img" class="deity-image" src="" alt="Deity Photo">
+    <div class="mantra-box">
+      <p class="mantra-text" id="mantra-text">...</p>
+    </div>
+  </div>
+
+  <div class="week-grid" id="week-grid"></div>
+
+  <script>
+    const schedule = [
+      { day: "Sunday", deity: "Lord Surya", img: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=600", mantra: "Om Suryaya Namaha — Salutations to the Sun God, the bringer of light and energy." },
+      { day: "Monday", deity: "Lord Shiva", img: "https://images.unsplash.com/photo-1567157577867-05ccb1388e66?w=600", mantra: "Om Namah Shivaya — I bow to Lord Shiva, the auspicious and peaceful one." },
+      { day: "Tuesday", deity: "Lord Hanuman", img: "https://images.unsplash.com/photo-1609137144813-7d9921338f24?w=600", mantra: "Om Hanumate Namaha — Salutations to Lord Hanuman, the embodiment of strength and devotion." },
+      { day: "Wednesday", deity: "Lord Ganesha", img: "https://images.unsplash.com/photo-1567591370501-447545934524?w=600", mantra: "Om Gam Ganapataye Namaha — Salutations to the remover of all obstacles." },
+      { day: "Thursday", deity: "Lord Vishnu", img: "https://images.unsplash.com/photo-1620216480572-132d73b0639e?w=600", mantra: "Om Namo Narayanaya — I bow to Lord Vishnu, the preserver of the universe." },
+      { day: "Friday", deity: "Goddess Lakshmi", img: "https://images.unsplash.com/photo-1604608678051-64d46d8d0ffe?w=600", mantra: "Om Shreem Mahalakshmiyaye Namaha — Salutations to Goddess Lakshmi, bestower of wealth and grace." },
+      { day: "Saturday", deity: "Lord Shani / Hanuman", img: "https://images.unsplash.com/photo-1609137144813-7d9921338f24?w=600", mantra: "Om Sham Shanicharaya Namaha — Salutations to Lord Shani, dispenser of justice." }
+    ];
+
+    const todayIndex = new Date().getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const todayData = schedule[todayIndex];
+
+    // Populate Main Display
+    document.getElementById("today-banner").innerText = `TODAY IS ${todayData.day.toUpperCase()}`;
+    document.getElementById("deity-name").innerText = todayData.deity;
+    document.getElementById("deity-img").src = todayData.img;
+    document.getElementById("deity-img").alt = todayData.deity;
+    document.getElementById("mantra-text").innerText = todayData.mantra;
+
+    // Populate 7-Day Footer Grid
+    const gridEl = document.getElementById("week-grid");
+    schedule.forEach((item, idx) => {
+      const card = document.createElement("div");
+      card.className = `day-card ${idx === todayIndex ? 'active' : ''}`;
+      card.innerHTML = `
+        <div class="day-name">${item.day}</div>
+        <div class="day-deity">${item.deity}</div>
+      `;
+      gridEl.appendChild(card);
+    });
+  </script>
+</body>
+</html>
