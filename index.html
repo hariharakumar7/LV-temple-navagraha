@@ -3,151 +3,210 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daily Devotion</title>
+  <title>Daily Navagraha Devotion</title>
   <style>
     :root {
       --saffron: #FF9933;
-      --maroon: #800000;
+      --deep-saffron: #E67E22;
       --gold: #FFD700;
-      --bg-dark: #1A0000;
+      --maroon: #4A0000;
+      --bg-dark: #120000;
+      --card-bg: rgba(255, 255, 255, 0.05);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
-      background: radial-gradient(circle at center, #330000 0%, var(--bg-dark) 100%);
+      background: radial-gradient(circle at center, var(--maroon) 0%, var(--bg-dark) 100%);
       color: #FFFFFF;
-      font-family: 'Segoe UI', -apple-system, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 2vw;
+      padding: 3vw 2vw 2vw 2vw;
       text-align: center;
       overflow: hidden;
     }
 
-    /* Main Today View */
-    .today-container {
+    /* Main Section */
+    .main-content {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 2vh;
     }
 
     .banner {
       background: linear-gradient(90deg, transparent, var(--saffron), transparent);
-      color: #000;
+      color: #000000;
       width: 100%;
-      padding: 1vh 0;
-      font-size: 2vw;
+      padding: 1.2vh 0;
+      font-size: 2.2vw;
       font-weight: 800;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
       text-transform: uppercase;
-      margin-bottom: 2vh;
-      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     }
 
     .deity-title {
-      font-size: 4vw;
+      font-size: 5.5vw;
       color: var(--gold);
-      margin-bottom: 2vh;
-      text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.4), 2px 2px 4px #000;
+      margin-top: 1vh;
     }
 
-    .deity-image {
-      height: 35vh;
-      max-width: 80%;
-      object-fit: contain;
-      border: 4px solid var(--gold);
-      border-radius: 12px;
-      box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-      margin-bottom: 2vh;
+    .mantra-container {
+      background: var(--card-bg);
+      border: 2px solid var(--gold);
+      border-radius: 16px;
+      padding: 4vh 4vw;
+      max-width: 85%;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+      margin: 2vh 0;
     }
 
-    .mantra-box {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 215, 0, 0.3);
-      padding: 2vh 4vw;
-      border-radius: 8px;
-      max-width: 90%;
+    .mantra-label {
+      font-size: 1.5vw;
+      color: var(--saffron);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 1.5vh;
+      font-weight: 700;
     }
 
     .mantra-text {
-      font-size: 2.8vw;
-      font-weight: 600;
-      color: #FFF;
+      font-size: 3.5vw;
+      font-weight: 700;
+      color: #FFFFFF;
       line-height: 1.3;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
     }
 
-    /* 7-Day Grid Footer */
+    /* 7-Day Grid Layout */
     .week-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 1vw;
       margin-top: 2vh;
-      border-top: 2px solid var(--saffron);
-      padding-top: 1.5vh;
+      margin-bottom: 2.5vh;
+      padding: 0 1vw;
     }
 
     .day-card {
       background: rgba(0, 0, 0, 0.4);
-      border: 1px solid #444;
-      border-radius: 6px;
-      padding: 1vh 0.5vw;
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 8px;
+      padding: 1.5vh 0.5vw;
+      transition: all 0.3s ease;
     }
 
     .day-card.active {
-      background: var(--saffron);
-      color: #000;
-      border-color: var(--gold);
-      transform: scale(1.05);
+      background: linear-gradient(135deg, var(--saffron), var(--deep-saffron));
+      color: #000000;
+      border: 2px solid var(--gold);
+      transform: scale(1.06);
+      box-shadow: 0 0 15px rgba(255, 153, 51, 0.6);
     }
 
-    .day-name { font-size: 1vw; font-weight: bold; text-transform: uppercase; }
-    .day-deity { font-size: 1.1vw; margin-top: 4px; }
+    .day-name {
+      font-size: 1.2vw;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .day-deity {
+      font-size: 1.3vw;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    /* Universal Footer Chant */
+    .footer-chant-box {
+      border-top: 2px dashed var(--saffron);
+      padding-top: 2vh;
+      width: 100%;
+    }
+
+    .footer-chant-title {
+      font-size: 1.2vw;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 0.8vh;
+      font-weight: 700;
+    }
+
+    .footer-chant-text {
+      font-size: 2vw;
+      font-weight: 600;
+      color: #FFF;
+      line-height: 1.4;
+      letter-spacing: 0.5px;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.9);
+    }
   </style>
 </head>
 <body>
 
-  <div class="today-container">
+  <!-- Main View for Today -->
+  <main class="main-content">
     <div class="banner" id="today-banner">TODAY IS ...</div>
     <h1 class="deity-title" id="deity-name">...</h1>
-    <img id="deity-img" class="deity-image" src="" alt="Deity Photo">
-    <div class="mantra-box">
+    
+    <div class="mantra-container">
+      <div class="mantra-label">Daily Mantra</div>
       <p class="mantra-text" id="mantra-text">...</p>
     </div>
-  </div>
+  </main>
 
-  <div class="week-grid" id="week-grid"></div>
+  <!-- 7-Day Schedule Grid -->
+  <section class="week-grid" id="week-grid"></section>
+
+  <!-- Universal Daily Chant Footer -->
+  <footer class="footer-chant-box">
+    <div class="footer-chant-title">Universal Daily Chant</div>
+    <p class="footer-chant-text">
+      Ādityāya cha sōmāya maṅgaḻāya budhāya cha |<br>
+      Guru śukra śanibhyaścha rāhavē kētavē namaḥ ||
+    </p>
+  </footer>
 
   <script>
     const schedule = [
-      { day: "Sunday", deity: "Lord Surya", img: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=600", mantra: "Om Suryaya Namaha — Salutations to the Sun God, the bringer of light and energy." },
-      { day: "Monday", deity: "Lord Shiva", img: "https://images.unsplash.com/photo-1567157577867-05ccb1388e66?w=600", mantra: "Om Namah Shivaya — I bow to Lord Shiva, the auspicious and peaceful one." },
-      { day: "Tuesday", deity: "Lord Hanuman", img: "https://images.unsplash.com/photo-1609137144813-7d9921338f24?w=600", mantra: "Om Hanumate Namaha — Salutations to Lord Hanuman, the embodiment of strength and devotion." },
-      { day: "Wednesday", deity: "Lord Ganesha", img: "https://images.unsplash.com/photo-1567591370501-447545934524?w=600", mantra: "Om Gam Ganapataye Namaha — Salutations to the remover of all obstacles." },
-      { day: "Thursday", deity: "Lord Vishnu", img: "https://images.unsplash.com/photo-1620216480572-132d73b0639e?w=600", mantra: "Om Namo Narayanaya — I bow to Lord Vishnu, the preserver of the universe." },
-      { day: "Friday", deity: "Goddess Lakshmi", img: "https://images.unsplash.com/photo-1604608678051-64d46d8d0ffe?w=600", mantra: "Om Shreem Mahalakshmiyaye Namaha — Salutations to Goddess Lakshmi, bestower of wealth and grace." },
-      { day: "Saturday", deity: "Lord Shani / Hanuman", img: "https://images.unsplash.com/photo-1609137144813-7d9921338f24?w=600", mantra: "Om Sham Shanicharaya Namaha — Salutations to Lord Shani, dispenser of justice." }
+      { day: "Sunday", deity: "Surya", mantra: "Om Hraam Hreem Hroum Sah Suryaya Namah" },
+      { day: "Monday", deity: "Chandra", mantra: "Om Shraam Shreem Shraum Sah Chandraye Namah" },
+      { day: "Tuesday", deity: "Mangal", mantra: "Om Kraam Kreem Kraum Sah Bhaumay Namah" },
+      { day: "Wednesday", deity: "Budha", mantra: "Om Braam Breem Braum Sah Budhay Namah" },
+      { day: "Thursday", deity: "Guru / Brihaspati", mantra: "Om Graam Greem Graum Sah Gurave Namah" },
+      { day: "Friday", deity: "Shukra", mantra: "Om Draam Dreem Draum Sah Shukray Namah" },
+      { day: "Saturday", deity: "Shani", mantra: "Om Praam Preem Praum Sah Shanicharay Namah" }
     ];
 
-    const todayIndex = new Date().getDay(); // 0 = Sunday, 1 = Monday, etc.
+    // Determine current day (0 = Sunday, 1 = Monday, etc.)
+    const todayIndex = new Date().getDay();
     const todayData = schedule[todayIndex];
 
-    // Populate Main Display
+    // Populate Today's Hero Section
     document.getElementById("today-banner").innerText = `TODAY IS ${todayData.day.toUpperCase()}`;
     document.getElementById("deity-name").innerText = todayData.deity;
-    document.getElementById("deity-img").src = todayData.img;
-    document.getElementById("deity-img").alt = todayData.deity;
-    document.getElementById("mantra-text").innerText = todayData.mantra;
+    document.getElementById("mantra-text").innerText = `"${todayData.mantra}"`;
 
-    // Populate 7-Day Footer Grid
+    // Populate 7-Day Grid
     const gridEl = document.getElementById("week-grid");
     schedule.forEach((item, idx) => {
       const card = document.createElement("div");
-      card.className = `day-card ${idx === todayIndex ? 'active' : ''}`;
+      const isActive = idx === todayIndex;
+      
+      card.className = `day-card ${isActive ? 'active' : ''}`;
       card.innerHTML = `
         <div class="day-name">${item.day}</div>
         <div class="day-deity">${item.deity}</div>
