@@ -36,7 +36,7 @@
     /* Outer Wrapper for Precise Vertical & Horizontal Centering */
     .app-viewport {
       width: 100%;
-      max-width: 1600px; /* Prevents overly wide stretching on 4K TVs */
+      max-width: 1600px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -70,7 +70,7 @@
       flex-direction: column;
       align-items: center;
       gap: 1.5vh;
-      container-type: inline-size; /* Enables Container Query Length Units */
+      container-type: inline-size;
     }
 
     /* Section Title Scales with Card Width */
@@ -134,9 +134,23 @@
       font-weight: 600;
       margin-top: 4px;
     }
+
+    /* Hidden video element style */
+    .hidden-video {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0.01;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
+
+  <!-- Hidden Keep-Awake Video to prevent Fire TV screensaver -->
+  <video id="keep-awake-video" class="hidden-video" autoplay loop muted playsinline>
+    <source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28ybXA0MQAAAAhmcmVlAAAAAG1kYXQAAAA=" type="video/mp4">
+  </video>
 
   <div class="app-viewport">
     <!-- Top Banner -->
@@ -193,6 +207,25 @@ Guru śukra śanibhyaścha rāhavē kētavē namaḥ ||</p>
         <div class="day-deity">${item.deity}</div>
       `;
       gridEl.appendChild(card);
+    });
+
+    // Screen Wake Lock API Integration
+    let wakeLock = null;
+    async function requestWakeLock() {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLock = await navigator.wakeLock.request('screen');
+        }
+      } catch (err) {
+        console.log(`Wake Lock Error: ${err.message}`);
+      }
+    }
+
+    requestWakeLock();
+    document.addEventListener('visibilitychange', () => {
+      if (wakeLock !== null && document.visibilityState === 'visible') {
+        requestWakeLock();
+      }
     });
   </script>
 </body>
