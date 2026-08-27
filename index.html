@@ -5,18 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daily Navagraha Devotion</title>
   <style>
+    :root {
+      --saffron: #FF9933;
+      --deep-saffron: #E67E22;
+      --gold: #FFD700;
+      --maroon: #4A0000;
+      --bg-dark: #120000;
+      --card-bg: rgba(255, 255, 255, 0.05);
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    /* Fallbacks for older TV browsers */
     body {
-      background-color: #120000; /* Solid dark maroon fallback */
-      background: radial-gradient(circle at center, #4A0000 0%, #120000 100%);
+      background: radial-gradient(circle at center, var(--maroon) 0%, var(--bg-dark) 100%);
       color: #FFFFFF;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       height: 100vh;
       width: 100vw;
       display: flex;
@@ -26,7 +33,7 @@
       padding: 2vw;
     }
 
-    /* Outer Centered Wrapper */
+    /* Outer Wrapper for Precise Vertical & Horizontal Centering */
     .app-viewport {
       width: 100%;
       max-width: 1600px;
@@ -39,12 +46,10 @@
 
     /* Banner for Day of Week */
     .banner {
-      background-color: #FF9933; /* Solid Saffron fallback */
-      background: linear-gradient(90deg, transparent, #FF9933, transparent);
+      background: linear-gradient(90deg, transparent, var(--saffron), transparent);
       color: #000000;
       width: 100%;
       padding: 1.2vh 0;
-      font-size: 24px;
       font-size: 2.4vw;
       font-weight: 800;
       letter-spacing: 3px;
@@ -53,11 +58,10 @@
       text-align: center;
     }
 
-    /* Standard Card Container */
+    /* Card Container with CSS Container Query enabled */
     .mantra-container {
-      background-color: #1C0505; /* Solid dark fallback for transparent bg */
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid #FFD700;
+      background: var(--card-bg);
+      border: 2px solid var(--gold);
       border-radius: 16px;
       padding: 3vh 3vw;
       width: 100%;
@@ -66,13 +70,13 @@
       flex-direction: column;
       align-items: center;
       gap: 1.5vh;
+      container-type: inline-size;
     }
 
-    /* Section Title */
+    /* Section Title Scales with Card Width */
     .section-title {
-      font-size: 22px;
-      font-size: 1.8vw;
-      color: #FFD700;
+      font-size: clamp(18px, 2.2cqi, 36px);
+      color: var(--gold);
       text-transform: uppercase;
       letter-spacing: 2px;
       font-weight: 800;
@@ -80,10 +84,9 @@
       text-align: center;
     }
 
-    /* Mantra Text */
+    /* Mantra Text scales dynamically based on container width */
     .mantra-text {
-      font-size: 28px;
-      font-size: 2.2vw;
+      font-size: clamp(20px, 2.8cqi, 48px);
       font-weight: 700;
       color: #FFFFFF;
       line-height: 1.45;
@@ -93,50 +96,46 @@
       width: 100%;
     }
 
-    /* 7-Day Grid Layout */
+    /* 7-Day Grid Layout centered with content */
     .week-grid {
-      display: flex; /* Fallback for older engines without CSS Grid */
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 1vw;
       width: 100%;
       padding-top: 1.5vh;
-      border-top: 2px dashed #FF9933;
+      border-top: 2px dashed var(--saffron);
     }
 
     .day-card {
-      background-color: #1A0000;
       background: rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(255, 215, 0, 0.2);
       border-radius: 8px;
       padding: 1.5vh 0.5vw;
       text-align: center;
-      flex: 1; /* Supports flexbox fallback */
+      transition: all 0.3s ease;
     }
 
     .day-card.active {
-      background-color: #FF9933;
-      background: linear-gradient(135deg, #FF9933, #E67E22);
+      background: linear-gradient(135deg, var(--saffron), var(--deep-saffron));
       color: #000000;
-      border: 2px solid #FFD700;
+      border: 2px solid var(--gold);
+      transform: scale(1.05);
       box-shadow: 0 0 15px rgba(255, 153, 51, 0.6);
     }
 
     .day-name {
-      font-size: 14px;
-      font-size: 1.1vw;
+      font-size: clamp(12px, 1.2vw, 20px);
       font-weight: 800;
       text-transform: uppercase;
     }
 
     .day-deity {
-      font-size: 15px;
-      font-size: 1.2vw;
+      font-size: clamp(13px, 1.3vw, 22px);
       font-weight: 600;
       margin-top: 4px;
     }
 
-    /* Hidden video style */
+    /* Hidden video element style */
     .hidden-video {
       position: absolute;
       width: 1px;
@@ -175,7 +174,7 @@ Guru śukra śanibhyaścha rāhavē kētavē namaḥ ||</p>
   </div>
 
   <script>
-    var schedule = [
+    const schedule = [
       { day: "Sunday", deity: "Surya", mantra: "japākusuma saṅkāśaṃ kāśyapēyaṃ mahādyutim । \ntamōriṃ sarva pāpaghnaṃ praṇatōsmi divākaram ॥" },
       { day: "Monday", deity: "Chandra", mantra: "dadhiśaṅkha tuṣārābhaṃ kṣīrārṇava samudbhavam (kṣīrōdārṇava sambhavam) । \nnamāmi śaśinaṃ sōmaṃ śambhō-rmakuṭa bhūṣaṇam ॥" },
       { day: "Tuesday", deity: "Kujah / Mangala", mantra: "dharaṇī garbha sambhūtaṃ vidyutkānti samaprabham । \n kumāraṃ śaktihastaṃ taṃ kujaṃ [maṅgaḻaṃ] praṇamāmyaham ॥" },
@@ -186,35 +185,48 @@ Guru śukra śanibhyaścha rāhavē kētavē namaḥ ||</p>
     ];
 
     // Determine current day (0 = Sunday, 1 = Monday, etc.)
-    var todayIndex = new Date().getDay();
-    var todayData = schedule[todayIndex];
+    const todayIndex = new Date().getDay();
+    const todayData = schedule[todayIndex];
 
     // Populate Top Banner
-    document.getElementById("today-banner").innerText = "TODAY IS " + todayData.day.toUpperCase();
+    document.getElementById("today-banner").innerText = `TODAY IS ${todayData.day.toUpperCase()}`;
 
     // Populate Dynamic Graham Block
-    document.getElementById("graham-title").innerText = "Today's Graham - " + todayData.deity;
+    document.getElementById("graham-title").innerText = `Today's Graham - ${todayData.deity}`;
     document.getElementById("graham-mantra").innerText = todayData.mantra;
 
     // Populate 7-Day Grid
-    var gridEl = document.getElementById("week-grid");
-    for (var i = 0; i < schedule.length; i++) {
-      var item = schedule[i];
-      var card = document.createElement("div");
-      var isActive = (i === todayIndex);
+    const gridEl = document.getElementById("week-grid");
+    schedule.forEach((item, idx) => {
+      const card = document.createElement("div");
+      const isActive = idx === todayIndex;
       
-      card.className = "day-card" + (isActive ? " active" : "");
-      card.innerHTML = '<div class="day-name">' + item.day + '</div>' +
-                       '<div class="day-deity">' + item.deity + '</div>';
+      card.className = `day-card ${isActive ? 'active' : ''}`;
+      card.innerHTML = `
+        <div class="day-name">${item.day}</div>
+        <div class="day-deity">${item.deity}</div>
+      `;
       gridEl.appendChild(card);
+    });
+
+    // Screen Wake Lock API Integration
+    let wakeLock = null;
+    async function requestWakeLock() {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLock = await navigator.wakeLock.request('screen');
+        }
+      } catch (err) {
+        console.log(`Wake Lock Error: ${err.message}`);
+      }
     }
 
-    // Screen Wake Lock API Integration (with ES5 browser safety checks)
-    if ('wakeLock' in navigator && navigator.wakeLock.request) {
-      navigator.wakeLock.request('screen').catch(function(err) {
-        console.log("Wake Lock Error: " + err.message);
-      });
-    }
+    requestWakeLock();
+    document.addEventListener('visibilitychange', () => {
+      if (wakeLock !== null && document.visibilityState === 'visible') {
+        requestWakeLock();
+      }
+    });
   </script>
 </body>
 </html>
