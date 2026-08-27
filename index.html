@@ -33,10 +33,9 @@
       padding: 2vw;
     }
 
-    /* Outer Wrapper for Precise Vertical & Horizontal Centering */
     .app-viewport {
       width: 100%;
-      max-width: 1600px;
+      max-width: 1800px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -44,7 +43,6 @@
       gap: 2.5vh;
     }
 
-    /* Banner for Day of Week */
     .banner {
       background: linear-gradient(90deg, transparent, var(--saffron), transparent);
       color: #000000;
@@ -58,12 +56,11 @@
       text-align: center;
     }
 
-    /* Card Container with CSS Container Query enabled */
     .mantra-container {
       background: var(--card-bg);
       border: 2px solid var(--gold);
       border-radius: 16px;
-      padding: 3vh 3vw;
+      padding: 2.5vh 3vw;
       width: 100%;
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
       display: flex;
@@ -73,9 +70,8 @@
       container-type: inline-size;
     }
 
-    /* Section Title Scales with Card Width */
     .section-title {
-      font-size: clamp(18px, 2.2cqi, 36px);
+      font-size: clamp(20px, 2.5cqi, 40px);
       color: var(--gold);
       text-transform: uppercase;
       letter-spacing: 2px;
@@ -84,19 +80,17 @@
       text-align: center;
     }
 
-    /* Mantra Text scales dynamically based on container width */
     .mantra-text {
-      font-size: clamp(20px, 2.8cqi, 48px);
+      font-size: clamp(24px, 3.4cqi, 58px);
       font-weight: 700;
       color: #FFFFFF;
-      line-height: 1.45;
+      line-height: 1.4;
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
       white-space: pre-line;
       text-align: center;
       width: 100%;
     }
 
-    /* 7-Day Grid Layout centered with content */
     .week-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -135,11 +129,13 @@
       margin-top: 4px;
     }
 
-    /* Hidden video element style */
-    .hidden-video {
+    /* Invisible canvas element to trigger active rendering frames */
+    #keep-alive-canvas {
       position: absolute;
-      width: 1px;
-      height: 1px;
+      top: 0;
+      left: 0;
+      width: 2px;
+      height: 2px;
       opacity: 0.01;
       pointer-events: none;
     }
@@ -147,29 +143,22 @@
 </head>
 <body>
 
-  <!-- Hidden Keep-Awake Video to prevent Fire TV screensaver -->
-  <video id="keep-awake-video" class="hidden-video" autoplay loop muted playsinline>
-    <source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28ybXA0MQAAAAhmcmVlAAAAAG1kYXQAAAA=" type="video/mp4">
-  </video>
+  <canvas id="keep-alive-canvas"></canvas>
 
   <div class="app-viewport">
-    <!-- Top Banner -->
     <div class="banner" id="today-banner">TODAY IS ...</div>
 
-    <!-- Dhyana Shlokam Block -->
     <div class="mantra-container">
       <div class="section-title">Dhyana Shlokam</div>
       <p class="mantra-text">Ādityāya cha sōmāya maṅgaḻāya budhāya cha |
 Guru śukra śanibhyaścha rāhavē kētavē namaḥ ||</p>
     </div>
 
-    <!-- Today's Graham Block -->
     <div class="mantra-container">
       <div class="section-title" id="graham-title">Today's Graham - ...</div>
       <p class="mantra-text" id="graham-mantra">...</p>
     </div>
 
-    <!-- 7-Day Schedule Grid -->
     <section class="week-grid" id="week-grid"></section>
   </div>
 
@@ -184,23 +173,17 @@ Guru śukra śanibhyaścha rāhavē kētavē namaḥ ||</p>
       { day: "Saturday", deity: "Shani", mantra: "nīlāñjana samābhāsaṃ raviputraṃ yamāgrajam । \nChāyā mārtāṇḍa sambhūtaṃ taṃ namāmi śanaiścharam ॥" }
     ];
 
-    // Determine current day (0 = Sunday, 1 = Monday, etc.)
     const todayIndex = new Date().getDay();
     const todayData = schedule[todayIndex];
 
-    // Populate Top Banner
     document.getElementById("today-banner").innerText = `TODAY IS ${todayData.day.toUpperCase()}`;
-
-    // Populate Dynamic Graham Block
     document.getElementById("graham-title").innerText = `Today's Graham - ${todayData.deity}`;
     document.getElementById("graham-mantra").innerText = todayData.mantra;
 
-    // Populate 7-Day Grid
     const gridEl = document.getElementById("week-grid");
     schedule.forEach((item, idx) => {
       const card = document.createElement("div");
       const isActive = idx === todayIndex;
-      
       card.className = `day-card ${isActive ? 'active' : ''}`;
       card.innerHTML = `
         <div class="day-name">${item.day}</div>
@@ -209,7 +192,17 @@ Guru śukra śanibhyaścha rāhavē kētavē namaḥ ||</p>
       gridEl.appendChild(card);
     });
 
-    // Screen Wake Lock API Integration
+    // Active Canvas Rendering Loop to simulate continuous web activity
+    const canvas = document.getElementById('keep-alive-canvas');
+    const ctx = canvas.getContext('2d');
+    function keepAliveLoop() {
+      ctx.fillStyle = ctx.fillStyle === '#ffffff' ? '#000000' : '#ffffff';
+      ctx.fillRect(0, 0, 2, 2);
+      requestAnimationFrame(keepAliveLoop);
+    }
+    keepAliveLoop();
+
+    // Screen Wake Lock API
     let wakeLock = null;
     async function requestWakeLock() {
       try {
@@ -220,7 +213,6 @@ Guru śukra śanibhyaścha rāhavē kētavē namaḥ ||</p>
         console.log(`Wake Lock Error: ${err.message}`);
       }
     }
-
     requestWakeLock();
     document.addEventListener('visibilitychange', () => {
       if (wakeLock !== null && document.visibilityState === 'visible') {
