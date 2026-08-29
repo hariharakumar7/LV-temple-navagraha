@@ -30,65 +30,82 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      padding: 2vw;
+      padding: 1.5vw;
     }
 
     .app-viewport {
       width: 100%;
-      max-width: 1800px;
+      height: 100%;
+      max-width: 1920px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 2.5vh;
+      justify-content: space-between;
+      gap: 1.5vh;
     }
 
     .banner {
       background: linear-gradient(90deg, transparent, var(--saffron), transparent);
       color: #000000;
       width: 100%;
-      padding: 1.2vh 0;
-      font-size: 2.4vw;
+      padding: 1vh 0;
+      font-size: clamp(20px, 2.2vw, 36px);
       font-weight: 800;
       letter-spacing: 3px;
       text-transform: uppercase;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
       text-align: center;
+      flex-shrink: 0;
     }
 
     .mantra-container {
       background: var(--card-bg);
       border: 2px solid var(--gold);
       border-radius: 16px;
-      padding: 2.5vh 3vw;
+      padding: 1.5vh 2vw;
       width: 100%;
+      flex: 1; /* Automatically expands card height to fill screen */
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1.5vh;
-      container-type: inline-size;
+      justify-content: flex-start;
+      overflow: hidden;
+      position: relative;
     }
 
     .section-title {
-      font-size: clamp(20px, 2.5cqi, 40px);
+      font-size: clamp(18px, 2vw, 32px);
       color: var(--gold);
       text-transform: uppercase;
       letter-spacing: 2px;
       font-weight: 800;
       text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
       text-align: center;
+      margin-bottom: 1vh;
+      flex-shrink: 0;
+    }
+
+    /* Target wrapper for binary search calculation */
+    .mantra-wrapper {
+      width: 100%;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
     }
 
     .mantra-text {
-      font-size: clamp(24px, 3.4cqi, 58px);
       font-weight: 700;
       color: #FFFFFF;
-      line-height: 1.4;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+      line-height: 1.35;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.9);
       white-space: pre-line;
       text-align: center;
-      width: 100%;
+      width: auto;
+      max-width: 100%;
+      display: inline-block;
     }
 
     .week-grid {
@@ -96,69 +113,63 @@
       grid-template-columns: repeat(7, 1fr);
       gap: 1vw;
       width: 100%;
-      padding-top: 1.5vh;
+      padding-top: 1vh;
       border-top: 2px dashed var(--saffron);
+      flex-shrink: 0;
     }
 
     .day-card {
       background: rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(255, 215, 0, 0.2);
       border-radius: 8px;
-      padding: 1.5vh 0.5vw;
+      padding: 1.2vh 0.5vw;
       text-align: center;
-      transition: all 0.3s ease;
     }
 
     .day-card.active {
       background: linear-gradient(135deg, var(--saffron), var(--deep-saffron));
       color: #000000;
       border: 2px solid var(--gold);
-      transform: scale(1.05);
+      transform: scale(1.02);
       box-shadow: 0 0 15px rgba(255, 153, 51, 0.6);
     }
 
     .day-name {
-      font-size: clamp(12px, 1.2vw, 20px);
+      font-size: clamp(12px, 1.1vw, 18px);
       font-weight: 800;
       text-transform: uppercase;
     }
 
     .day-deity {
-      font-size: clamp(13px, 1.3vw, 22px);
+      font-size: clamp(13px, 1.2vw, 20px);
       font-weight: 600;
-      margin-top: 4px;
-    }
-
-    /* Invisible canvas element to trigger active rendering frames */
-    #keep-alive-canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 2px;
-      height: 2px;
-      opacity: 0.01;
-      pointer-events: none;
+      margin-top: 2px;
     }
   </style>
 </head>
 <body>
 
-  <canvas id="keep-alive-canvas"></canvas>
-
   <div class="app-viewport">
     <div class="banner" id="today-banner">TODAY IS ...</div>
 
+    <!-- Dhyana Shlokam Card -->
     <div class="mantra-container">
       <div class="section-title">Dhyana Shlokam</div>
-      <p class="mantra-text">Ādityāya cha sōmāya maṅgaḻāya budhāya cha |
+      <div class="mantra-wrapper">
+        <p class="mantra-text">Ādityāya cha sōmāya maṅgaḻāya budhāya cha |
 Guru śukra śanibhyaścha rāhavē kētavē namaḥ ||</p>
+      </div>
     </div>
 
+    <!-- Today's Graham Card -->
     <div class="mantra-container">
       <div class="section-title" id="graham-title">Today's Graham - ...</div>
-      <p class="mantra-text" id="graham-mantra">...</p>
+      <div class="mantra-wrapper">
+        <p class="mantra-text" id="graham-mantra">...</p>
+      </div>
     </div>
 
+    <!-- 7-Day Grid -->
     <section class="week-grid" id="week-grid"></section>
   </div>
 
@@ -192,33 +203,41 @@ Guru śukra śanibhyaścha rāhavē kētavē namaḥ ||</p>
       gridEl.appendChild(card);
     });
 
-    // Active Canvas Rendering Loop to simulate continuous web activity
-    const canvas = document.getElementById('keep-alive-canvas');
-    const ctx = canvas.getContext('2d');
-    function keepAliveLoop() {
-      ctx.fillStyle = ctx.fillStyle === '#ffffff' ? '#000000' : '#ffffff';
-      ctx.fillRect(0, 0, 2, 2);
-      requestAnimationFrame(keepAliveLoop);
-    }
-    keepAliveLoop();
+    // Fast Binary-Search Font Autoscaler
+    function maximizeMantraFont(textEl) {
+      const wrapper = textEl.parentElement;
+      let min = 12;
+      let max = 140; // Upper limit for large TV panels
+      let optimal = min;
 
-    // Screen Wake Lock API
-    let wakeLock = null;
-    async function requestWakeLock() {
-      try {
-        if ('wakeLock' in navigator) {
-          wakeLock = await navigator.wakeLock.request('screen');
+      while (min <= max) {
+        const mid = Math.floor((min + max) / 2);
+        textEl.style.fontSize = mid + "px";
+
+        // Check if text exceeds container height or width
+        if (textEl.offsetHeight <= wrapper.clientHeight && textEl.offsetWidth <= wrapper.clientWidth) {
+          optimal = mid;
+          min = mid + 1; // Try bigger font
+        } else {
+          max = mid - 1; // Overshot container bounds, reduce size
         }
-      } catch (err) {
-        console.log(`Wake Lock Error: ${err.message}`);
       }
+
+      textEl.style.fontSize = optimal + "px";
     }
-    requestWakeLock();
-    document.addEventListener('visibilitychange', () => {
-      if (wakeLock !== null && document.visibilityState === 'visible') {
-        requestWakeLock();
-      }
-    });
+
+    function fitAllText() {
+      document.querySelectorAll(".mantra-text").forEach(maximizeMantraFont);
+    }
+
+    // Execute scaling on initial load and window resizes
+    window.addEventListener("load", fitAllText);
+    window.addEventListener("resize", fitAllText);
+
+    // Run again after font renders to guarantee accurate bounding box measurements
+    if (document.fonts) {
+      document.fonts.ready.then(fitAllText);
+    }
   </script>
 </body>
 </html>
