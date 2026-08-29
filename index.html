@@ -11,7 +11,6 @@
       --gold: #FFD700;
       --maroon: #4A0000;
       --bg-dark: #120000;
-      --card-bg: rgba(255, 255, 255, 0.05);
     }
 
     * {
@@ -59,12 +58,14 @@
     }
 
     .mantra-container {
-      background: var(--card-bg);
+      /* Solid maroon fallback prevents TV engines from collapsing transparent alpha layers to black */
+      background-color: #1a0303;
+      background: rgba(35, 5, 5, 0.65);
       border: 2px solid var(--gold);
       border-radius: 16px;
       padding: 1.5vh 2vw;
       width: 100%;
-      flex: 1; /* Automatically expands card height to fill screen */
+      flex: 1;
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
       display: flex;
       flex-direction: column;
@@ -86,7 +87,6 @@
       flex-shrink: 0;
     }
 
-    /* Target wrapper for binary search calculation */
     .mantra-wrapper {
       width: 100%;
       flex: 1;
@@ -119,6 +119,7 @@
     }
 
     .day-card {
+      background-color: #120101;
       background: rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(255, 215, 0, 0.2);
       border-radius: 8px;
@@ -203,23 +204,22 @@ Guru śukra śanibhyaścha rāhavē kētavē namaḥ ||</p>
       gridEl.appendChild(card);
     });
 
-    // Fast Binary-Search Font Autoscaler
+    // Binary search font autoscaler
     function maximizeMantraFont(textEl) {
       const wrapper = textEl.parentElement;
       let min = 12;
-      let max = 140; // Upper limit for large TV panels
+      let max = 140;
       let optimal = min;
 
       while (min <= max) {
         const mid = Math.floor((min + max) / 2);
         textEl.style.fontSize = mid + "px";
 
-        // Check if text exceeds container height or width
         if (textEl.offsetHeight <= wrapper.clientHeight && textEl.offsetWidth <= wrapper.clientWidth) {
           optimal = mid;
-          min = mid + 1; // Try bigger font
+          min = mid + 1;
         } else {
-          max = mid - 1; // Overshot container bounds, reduce size
+          max = mid - 1;
         }
       }
 
@@ -230,11 +230,9 @@ Guru śukra śanibhyaścha rāhavē kētavē namaḥ ||</p>
       document.querySelectorAll(".mantra-text").forEach(maximizeMantraFont);
     }
 
-    // Execute scaling on initial load and window resizes
     window.addEventListener("load", fitAllText);
     window.addEventListener("resize", fitAllText);
 
-    // Run again after font renders to guarantee accurate bounding box measurements
     if (document.fonts) {
       document.fonts.ready.then(fitAllText);
     }
