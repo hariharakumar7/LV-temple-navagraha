@@ -151,7 +151,7 @@
 <body>
 
   <div class="app-viewport">
-    <div class="banner" id="today-banner">TODAY IS ...</div>
+    <div class="banner" id="today-banner">Today Graha Devata is ...</div>
 
     <!-- Today's Graham Card (Top) -->
     <div class="mantra-container">
@@ -188,7 +188,7 @@ Guru śukra śanibhyaścha rāhavē kētavē namaḥ ||</p>
     const todayIndex = new Date().getDay();
     const todayData = schedule[todayIndex];
 
-    document.getElementById("today-banner").innerText = `TODAY IS ${todayData.day.toUpperCase()}`;
+    document.getElementById("today-banner").innerText = `Today's Graha Devata is ${todayData.deity.toUpperCase()}`;
     document.getElementById("graham-title").innerText = `${todayData.deity.toUpperCase()} STOTRAM`;
     document.getElementById("graham-mantra").innerText = todayData.mantra;
 
