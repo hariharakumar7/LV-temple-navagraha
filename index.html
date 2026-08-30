@@ -153,20 +153,20 @@
   <div class="app-viewport">
     <div class="banner" id="today-banner">TODAY IS ...</div>
 
-    <!-- Dhyana Shlokam Card -->
+    <!-- Today's Graham Card (Top) -->
+    <div class="mantra-container">
+      <div class="section-title" id="graham-title">Stotram ...</div>
+      <div class="mantra-wrapper">
+        <p class="mantra-text" id="graham-mantra">...</p>
+      </div>
+    </div>
+
+    <!-- Navagraha Dhyana Shlokam Card (Bottom) -->
     <div class="mantra-container">
       <div class="section-title">Navagraha Dhyana Shlokam</div>
       <div class="mantra-wrapper">
         <p class="mantra-text">Ādityāya cha sōmāya maṅgaḻāya budhāya cha |
 Guru śukra śanibhyaścha rāhavē kētavē namaḥ ||</p>
-      </div>
-    </div>
-
-    <!-- Today's Graham Card -->
-    <div class="mantra-container">
-      <div class="section-title" id="graham-title">Stotram ...</div>
-      <div class="mantra-wrapper">
-        <p class="mantra-text" id="graham-mantra">...</p>
       </div>
     </div>
 
@@ -189,7 +189,7 @@ Guru śukra śanibhyaścha rāhavē kētavē namaḥ ||</p>
     const todayData = schedule[todayIndex];
 
     document.getElementById("today-banner").innerText = `TODAY IS ${todayData.day.toUpperCase()}`;
-    document.getElementById("graham-title").innerText = `${todayData.deity} STOTRAM`;
+    document.getElementById("graham-title").innerText = `${todayData.deity.toUpperCase()} STOTRAM`;
     document.getElementById("graham-mantra").innerText = todayData.mantra;
 
     const gridEl = document.getElementById("week-grid");
